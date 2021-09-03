@@ -19,6 +19,9 @@ public class JournalModel  implements Serializable {
         this.journalThumbnail = journalThumbnail;
         this.name = name;
     }
+    public JournalModel(){
+
+    }
 
     public String getJournal_id() {
         return journal_id;

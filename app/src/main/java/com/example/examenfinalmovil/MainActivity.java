@@ -1,12 +1,10 @@
 package com.example.examenfinalmovil;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -15,13 +13,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.examenfinalmovil.Utilities.Utilities;
-import com.example.examenfinalmovil.adapters.ListAdapterJournal;
+import com.example.examenfinalmovil.adapters.ListAdapterJ;
 import com.example.examenfinalmovil.models.JournalModel;
+import com.mindorks.placeholderview.PlaceHolderView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +32,10 @@ public class MainActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
 
     private RecyclerView rvListJournal;
-
-    private ListAdapterJournal adapterJournal;
+    
     private List<JournalModel> listJournal;
+
+    private PlaceHolderView placeHolderViewLIST;
 
 
 
@@ -42,16 +43,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        addPharm();
+        placeHolderViewLIST = (PlaceHolderView) findViewById(R.id.rvListjorunalx);
+        getdata();
 
     }
 
-    private void addPharm(){
+    private void getdata(){
 
-        rvListJournal = findViewById(R.id.rvListjorunal);
-        rvListJournal.setLayoutManager(new GridLayoutManager(getApplicationContext(), 1));
-        rvListJournal.setHasFixedSize(true);
+        listJournal= new ArrayList<>();
 
         //Obtención de datos del web service utilzando Volley
         // requestQueue = Volley.newRequestQueue(this);
@@ -66,6 +65,35 @@ public class MainActivity extends AppCompatActivity {
                         if (size > 0)
                         {
                           Log.d("Response",response);
+                            try {
+                             //   json_transform = new JSONObject(response);
+                               JSONArray jsonArray = new JSONArray(response.replace("?",""));
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject object = jsonArray.getJSONObject(i);
+                                    Log.d("journal_id",object.get("journal_id").toString());
+                                    //  Log.d("name",object.get("user_id").toString());
+
+                                    placeHolderViewLIST.addView(new ListAdapterJ(getApplicationContext(),
+                                            new JournalModel(object.get("journal_id").toString(),
+                                            object.get("portada").toString(),
+                                            object.get("abbreviation").toString(),
+                                            object.get("description").toString(),
+                                            object.get("journalThumbnail").toString(),
+                                            object.get("name").toString())));
+
+
+
+
+                               //    JournalModel journalModel = new JournalModel();
+                                  // journalModel.se
+                                  //
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+
                         }
                     }
                 },

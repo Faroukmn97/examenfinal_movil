@@ -46,6 +46,8 @@ dependencies {
     //nuevas librerías
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
+
+    compile 'com.mindorks:placeholderview:0.7.1'
     //Material Design
     implementation "com.google.android.material:material:1.2.0-alpha02"
 

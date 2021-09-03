@@ -9,6 +9,7 @@
     app:cardElevation="6dp"
     app:cardUseCompatPadding="true">
     <LinearLayout
+        andriod:id="@+id/id_jornul"
         andriod:layout_width="match_parent"
         andriod:layout_height="wrap_content"
         andriod:animateLayoutChanges="true"
