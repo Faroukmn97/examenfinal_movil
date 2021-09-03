@@ -3,8 +3,11 @@ package com.example.examenfinalmovil;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -31,11 +34,12 @@ public class MainActivity extends AppCompatActivity {
     private String URL = "https://revistas.uteq.edu.ec/";
     private RequestQueue requestQueue;
 
-    private RecyclerView rvListJournal;
-    
     private List<JournalModel> listJournal;
 
     private PlaceHolderView placeHolderViewLIST;
+
+    private SharedPreferences preferences;
+    private String journal_id, portada, abbreviation, description, journalThumbnail, name;
 
 
 
@@ -43,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        init();
+      //  limpiarpreferents();
         placeHolderViewLIST = (PlaceHolderView) findViewById(R.id.rvListjorunalx);
         getdata();
 
@@ -70,8 +76,6 @@ public class MainActivity extends AppCompatActivity {
                                JSONArray jsonArray = new JSONArray(response.replace("?",""));
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject object = jsonArray.getJSONObject(i);
-                                    Log.d("journal_id",object.get("journal_id").toString());
-                                    //  Log.d("name",object.get("user_id").toString());
 
                                     placeHolderViewLIST.addView(new ListAdapterJ(getApplicationContext(),
                                             new JournalModel(object.get("journal_id").toString(),
@@ -81,12 +85,15 @@ public class MainActivity extends AppCompatActivity {
                                             object.get("journalThumbnail").toString(),
                                             object.get("name").toString())));
 
+                                    SharedPreferences.Editor editor = preferences.edit();
+                                    editor.putString("journal_id",object.get("journal_id").toString());
+                                    editor.putString("portada",object.get("portada").toString());
+                                    editor.putString("abbreviation",object.get("abbreviation").toString());
+                                    editor.putString("description",object.get("description").toString());
+                                    editor.putString("journalThumbnail",object.get("journalThumbnail").toString());
+                                    editor.putString("name",object.get("name").toString());
+                                    editor.commit();
 
-
-
-                               //    JournalModel journalModel = new JournalModel();
-                                  // journalModel.se
-                                  //
                                 }
 
                             } catch (JSONException e) {
@@ -118,5 +125,23 @@ public class MainActivity extends AppCompatActivity {
         } else {
             requestQueue.add(request);
         }
+    }
+
+    private void init() {
+        preferences = getSharedPreferences("Preferences", MODE_PRIVATE);
+    }
+
+    public void journals() {
+        journal_id = preferences.getString("journal_id", null);
+        portada = preferences.getString("portada", null);
+        abbreviation = preferences.getString("abbreviation", null);
+        description = preferences.getString("description", null);
+        journalThumbnail = preferences.getString("journalThumbnail", null);
+        name = preferences.getString("name", null);
+    }
+
+    private void limpiarpreferents() {
+        preferences.edit().clear().apply();
+        Toast.makeText(MainActivity.this, "Limpiando Preferents", Toast.LENGTH_LONG).show();
     }
 }

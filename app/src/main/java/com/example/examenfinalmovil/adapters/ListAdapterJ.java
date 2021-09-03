@@ -2,6 +2,7 @@ package com.example.examenfinalmovil.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.text.Html;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import com.mindorks.placeholderview.annotations.View;
 @NonReusable
 @Layout(R.layout.element_list_journal)
 public class ListAdapterJ {
+
     @View(R.id.rvListjorunalx)
     PlaceHolderView mPlaceHolderView;
     @View(R.id.journalmageView)
@@ -30,8 +32,6 @@ public class ListAdapterJ {
     @View(R.id.journaldescription)
     TextView journaldescription;
 
-
-
     JournalModel journalModel = new JournalModel();
     private Context context;
 
@@ -40,7 +40,8 @@ public class ListAdapterJ {
 
     public void clicItem() {
         Intent intent = new Intent(context, VolumenActivity.class);
-        intent.putExtra("id", journalModel.getJournal_id());
+
+        intent.putExtra("journal_id", journalModel.getJournal_id());
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         context.startActivity(intent);
     }
@@ -58,4 +59,5 @@ public class ListAdapterJ {
         this.journaldescription.setText(Html.fromHtml(journalModel.getDescription()));
         Glide.with(context).load(journalModel.getPortada()).into(this.journalmageView);
     }
+
 }
